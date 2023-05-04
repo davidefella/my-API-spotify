@@ -4,7 +4,7 @@
   "description": "Demo project for using Spotify API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/davidefella/my-API-spotify/issues"
   },
-  "homepage": "https://github.com/davidefella/my-API-spotify#readme"
+  "homepage": "https://github.com/davidefella/my-API-spotify#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.22"
+    }
 }
