@@ -2,9 +2,9 @@
   "name": "my-api-spotify",
   "version": "1.0.0",
   "description": "Demo project for using Spotify API",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

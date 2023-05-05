@@ -11,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
+    <script src="path/to/my-script.js"></script>
 
     <style>
         body {
@@ -21,20 +22,14 @@
 
 <body>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div id="login">
-                            <h1 class="mb-4 text-center">My 5 Top Artists</h1>
-                            <a class="btn btn-primary d-block mx-auto text-white" href="/login">Fetch Data</a>
-                        </div>
-                        <div id="logged-in" style="display:none">
-                            <h1>My Top Artists</h1>
-                            <div id="top-artists"></div>
-                        </div>
-                    </div>
-                </div>
+        <div class="row justify-content-center col-lg-6">
+            <div id="login">
+                <h1 class="mb-4 text-center">My 5 Top Artists</h1>
+                <a class="btn btn-primary d-block mx-auto text-white" href="/login">Fetch Data</a>
+            </div>
+            <div id="logged-in" style="display:none">
+                <h1>My Top Artists</h1>
+                <div id="top-artists"></div>
             </div>
         </div>
     </div>
@@ -64,13 +59,37 @@
             alert('There was an error during the authentication');
         } else {
             if (access_token) {
-                document.getElementById("login").style.display = "none"; // change to login screen by hiding matching divs
-                document.getElementById("logged-in").style.display = "block"; // but only if the login was successful
+                document.getElementById("login").style.display = "none";
+                document.getElementById("logged-in").style.display = "block";
+
+                fetch('/topartists', {})
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        let artists = data.map(function (artist) {
+                            return artist;
+                        });
+
+                        let artistsContainer = document.getElementById("top-artists");
+                        let artistsList = document.createElement("ul");
+
+                        artists.forEach(function (artist) {
+                            let artistItem = document.createElement("li");
+                            artistItem.appendChild(document.createTextNode(artist));
+                            artistsList.appendChild(artistItem);
+                        });
+                        artistsContainer.appendChild(artistsList);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             } else {
                 document.getElementById("login").style.display = "block";
                 document.getElementById("logged-in").style.display = "none";
             };
         };
+    </script>
     </script>
 </body>
 
