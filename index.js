@@ -20,10 +20,6 @@ let stateKey = "spotify_auth_state"; // name of the cookie
 app.use(express.static(__dirname + "/public")).use(cookieParser());
 
 app.get("/login", function (req, res) {
-  console.log("***** ENV DATA *****");
-  console.log(process.env.CLIENT_ID);
-  console.log(process.env.CLIENT_SECRET);
-  console.log(process.env.REDIRECT_URI);
 
   let state = generateRandomString(16);
 
@@ -43,14 +39,9 @@ app.get("/login", function (req, res) {
 });
 
 app.get("/callback", function (req, res) {
-  console.log("Ciao");
-
   let code = req.query.code || null;
   let state = req.query.state || null;
   let storedState = req.cookies ? req.cookies[stateKey] : null;
-
-  console.log("code: " + code);
-  console.log("state: " + state);
 
   // TODO: Implementare un meccanismo di gestione dell'errore
   if (state === null || state !== storedState) {
@@ -81,8 +72,19 @@ app.get("/callback", function (req, res) {
   
         res.redirect('/#' + querystring.stringify({ access_token: access_token, refresh_token: refresh_token }));
   
-        console.log(access_token);
-        console.log(refresh_token);
+        axios({
+          url: 'https://api.spotify.com/v1/me/top/artists',
+          method: 'GET',
+          headers: {'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/json'},
+          params: {'time_range': 'short_term', 'limit': 3}
+        })
+        .then(function (response) {
+          console.log(response.data.items); // visualizza la lista di artisti
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
       } else {
         console.log("Errore gestione status");
       }
