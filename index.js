@@ -9,10 +9,9 @@ const express = require("express");
  * L'encoding mi serve se nella mia URL ho caratteri che possono crearmi problemi come &
  */
 const querystring = require("querystring");
-const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const http = require("http");
 const axios = require("axios");
+const client_secret_base64 = Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64')
 
 let app = express();
 let stateKey = "spotify_auth_state"; // name of the cookie
@@ -62,20 +61,6 @@ app.get("/callback", function (req, res) {
     //Resetto il cookie per il prossimo giro
     res.clearCookie(stateKey); // eat (clear) cookie
 
-    const authOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization:
-          "Basic " +
-          Buffer.from(
-            process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET
-          ).toString("base64"),
-      },
-      body: `code=${code}&redirect_uri=${process.env.REDIRECT_URI}&grant_type=authorization_code`,
-      json: true,
-    };
-
     axios({
       url: 'https://accounts.spotify.com/api/token',
       method: 'post',
@@ -86,7 +71,7 @@ app.get("/callback", function (req, res) {
       },
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ' + Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64')
+        'Authorization': 'Basic ' + client_secret_base64
       }
     })
     .then(response => {
