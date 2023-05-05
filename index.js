@@ -23,6 +23,12 @@ let stateKey = "spotify_auth_state"; // name of the cookie
 app.use(express.static(__dirname + "/public")).use(cookieParser());
 
 app.get("/login", function (req, res) {
+
+  console.log("***** ENV DATA *****")
+  console.log(process.env.CLIENT_ID); 
+  console.log(process.env.CLIENT_SECRET); 
+  console.log(process.env.REDIRECT_URI); });
+  
   let state = generateRandomString(16);
 
   res.cookie(stateKey, state); // set cookie to travel with request
@@ -39,10 +45,6 @@ app.get("/login", function (req, res) {
       })
   );
 
-  console.log("***** ENV DATA *****")
-  console.log(process.env.CLIENT_ID); 
-  console.log(process.env.CLIENT_SECRET); 
-  console.log(process.env.REDIRECT_URI); });
 
 app.get("/callback", function (req, res) {
   console.log("Ciao");
