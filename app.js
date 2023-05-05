@@ -1,7 +1,7 @@
 // https://github.com/Kickblip/spotify-auth-code-example
 require("dotenv").config();
 
-const { generateRandomString } = require('./utils/utils');
+const { authorize } = require('./server/auth');
 
 
 const express = require("express");
@@ -21,21 +21,7 @@ app.use(express.static(__dirname + "/public")).use(cookieParser());
 
 app.get("/login", function (req, res) {
 
-  let spotifyAuthState = generateRandomString(16);
-
-  res.cookie(stateKey, spotifyAuthState);
-
-  const scope = "user-read-private user-read-email user-top-read";
-  res.redirect(
-    "https://accounts.spotify.com/authorize?" +
-      querystring.stringify({
-        response_type: "code",
-        client_id: process.env.CLIENT_ID,
-        scope: scope,
-        redirect_uri: process.env.REDIRECT_URI,
-        state: spotifyAuthState,
-      })
-  );
+  authorize(res, stateKey); 
 });
 
 app.get("/callback", function (req, res) {
