@@ -16,9 +16,7 @@ let app = express();
 let stateKey = "spotify_auth_state"; // name of the cookie
 
 
-console.log(process.env.CLIENT_ID); 
-console.log(process.env.CLIENT_SECRET); 
-console.log(process.env.REDIRECT_URI); 
+
 
 
 /** Il cookie mi serve perchè devo memorizzare il mio state (random string) */
@@ -41,8 +39,10 @@ app.get("/login", function (req, res) {
       })
   );
 
-  console.log("Login call");
-});
+  console.log("***** ENV DATA *****")
+  console.log(process.env.CLIENT_ID); 
+  console.log(process.env.CLIENT_SECRET); 
+  console.log(process.env.REDIRECT_URI); });
 
 app.get("/callback", function (req, res) {
   console.log("Ciao");
