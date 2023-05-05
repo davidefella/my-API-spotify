@@ -1,6 +1,9 @@
 // https://github.com/Kickblip/spotify-auth-code-example
 require("dotenv").config();
 
+const { generateRandomString } = require('./utils/utils');
+
+
 const express = require("express");
 
 const querystring = require("querystring");
@@ -106,24 +109,6 @@ app.get("/topartists", function (req, res) {
     });
   }
 });
-
-
-
-
-
-
-
-// AUX methods
-function generateRandomString(length) {
-  let text = "";
-  const possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-}
 
 console.log("Listening on 8888");
 app.listen(8888);
