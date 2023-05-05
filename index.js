@@ -80,6 +80,14 @@ app.get("/callback", function (req, res) {
         })
         .then(function (response) {
           console.log(response.data.items); // visualizza la lista di artisti
+
+          const topArtistsDiv = document.getElementById("top-artists");
+          const topArtists = response.data.items;
+          topArtists.forEach(function(artist) {
+            const artistName = document.createElement("p");
+            artistName.textContent = artist.name;
+            topArtistsDiv.appendChild(artistName);
+          });
         })
         .catch(function (error) {
           console.log(error);
