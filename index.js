@@ -3,30 +3,27 @@ require("dotenv").config();
 
 const express = require("express");
 
-/* querystring può essere sostituito utilizzando il metodo encodeURIComponent, ad esempio 
-* 'access_token=' + encodeURIComponent(access_token) + '&refresh_token=' + encodeURIComponent(refresh_token);
-*
-* L'encoding mi serve se nella mia URL ho caratteri che possono crearmi problemi come &
-*/
+/* querystring può essere sostituito utilizzando il metodo encodeURIComponent, ad esempio
+ * 'access_token=' + encodeURIComponent(access_token) + '&refresh_token=' + encodeURIComponent(refresh_token);
+ *
+ * L'encoding mi serve se nella mia URL ho caratteri che possono crearmi problemi come &
+ */
 const querystring = require("querystring");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const http = require("http");
+const axios = require("axios");
 
 let app = express();
 let stateKey = "spotify_auth_state"; // name of the cookie
-
-
-
-
 
 /** Il cookie mi serve perchè devo memorizzare il mio state (random string) */
 app.use(express.static(__dirname + "/public")).use(cookieParser());
 
 app.get("/login", function (req, res) {
-
   console.log("***** ENV DATA *****");
-  console.log(process.env.CLIENT_ID); 
-  console.log(process.env.CLIENT_SECRET); 
+  console.log(process.env.CLIENT_ID);
+  console.log(process.env.CLIENT_SECRET);
   console.log(process.env.REDIRECT_URI);
 
   let state = generateRandomString(16);
@@ -44,7 +41,7 @@ app.get("/login", function (req, res) {
         state: state,
       })
   );
- });
+});
 
 app.get("/callback", function (req, res) {
   console.log("Ciao");
@@ -71,32 +68,43 @@ app.get("/callback", function (req, res) {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization:
           "Basic " +
-          Buffer.from(process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET).toString("base64")},
-        body: `code=${code}&redirect_uri=${process.env.REDIRECT_URI}&grant_type=authorization_code`,
-        json: true,
+          Buffer.from(
+            process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET
+          ).toString("base64"),
+      },
+      body: `code=${code}&redirect_uri=${process.env.REDIRECT_URI}&grant_type=authorization_code`,
+      json: true,
     };
 
-    fetch("https://accounts.spotify.com/api/token", authOptions).then(
-      (response) => {
-        response.json().then((data) => {
-          if (response.status === 200) {
-            let access_token = data.access_token;
-            let refresh_token = data.refresh_token;
-
-            res.redirect('/#' +
-            querystring.stringify({access_token: access_token, refresh_token: refresh_token}));
-
-            console.log(access_token);
-            console.log(refresh_token);
-          } else {
-            console.log("Errore gestione status");
-          }
-})
-        .catch(error => {
-            console.error(error);
-        });;
+    axios({
+      url: 'https://accounts.spotify.com/api/token',
+      method: 'post',
+      params: {
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: process.env.REDIRECT_URI
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Basic ' + Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64')
       }
-    );
+    })
+    .then(response => {
+      if (response.status === 200) {
+        let access_token = response.data.access_token;
+        let refresh_token = response.data.refresh_token;
+  
+        res.redirect('/#' + querystring.stringify({ access_token: access_token, refresh_token: refresh_token }));
+  
+        console.log(access_token);
+        console.log(refresh_token);
+      } else {
+        console.log("Errore gestione status");
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
   }
 });
 
