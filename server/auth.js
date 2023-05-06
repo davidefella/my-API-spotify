@@ -7,6 +7,11 @@ const { COOKIE_SPOTIFY_AUTH_STATE, COOKIE_AUTH_TOKEN, COOKIE_REFRESH_TOKEN } = r
 const client_secret_base64 = Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64'); 
 
 function authorize(res){
+
+    for (const cookie in res.cookies) {
+        res.clearCookie(cookie);
+      }
+
     let spotifyAuthState = generateRandomString(16);
 
     res.cookie(COOKIE_SPOTIFY_AUTH_STATE, spotifyAuthState);
@@ -30,8 +35,6 @@ function callback(req, res ){
     let state = req.query.state || null;
     let storedState = req.cookies ? req.cookies[COOKIE_SPOTIFY_AUTH_STATE] : null;
     
-    console.log('In callback calling'); 
-
     if (state === null || state !== storedState) {
       const query = querystring.stringify({ request_error: "state_mismatch" });
   
