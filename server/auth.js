@@ -4,6 +4,8 @@ const axios = require("axios");
 const { generateRandomString } = require('../utils/state-generator');
 const { COOKIE_SPOTIFY_AUTH_STATE, COOKIE_AUTH_TOKEN, COOKIE_REFRESH_TOKEN } = require('../utils/constants');
 
+const logger = require("../utils/logger");
+
 const client_secret_base64 = Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64'); 
 
 function authorize(res){
@@ -35,12 +37,13 @@ function callback(req, res ){
     let state = req.query.state || null;
     let storedState = req.cookies ? req.cookies[COOKIE_SPOTIFY_AUTH_STATE] : null;
     
+    logger.debug(`state: ${state}, code: ${code}, storedState: ${storedState}`); 
+
     if (state === null || state !== storedState) {
-      const query = querystring.stringify({ request_error: "state_mismatch" });
+      logger.error(`Error in callback - state: ${state} storedState: ${storedState}`); 
   
-      res.redirect("/error?" + query);
+      res.redirect("/error?" + querystring.stringify({ request_error: "state_mismatch" }));
     } else {
-      res.clearCookie(COOKIE_SPOTIFY_AUTH_STATE); 
   
       axios({
         url: 'https://accounts.spotify.com/api/token',
@@ -57,17 +60,24 @@ function callback(req, res ){
       })
       .then(response => {
         if (response.status === 200) {
+          logger.debug(`COOKIE_AUTH_TOKEN: ${response.data.access_token}`); 
+          logger.info(`Token successfully acquired.`); 
+
           res.cookie(COOKIE_AUTH_TOKEN, response.data.access_token);
           res.cookie(COOKIE_REFRESH_TOKEN, response.data.refresh_token);
     
           res.redirect('/#' + querystring.stringify({ access_token: response.data.access_token, refresh_token: response.data.refresh_token }));
   
         } else {
-          console.log("Errore gestione status");
+            logger.error(`Error token request: ${response}`); 
+
+            res.redirect("/error?" + querystring.stringify({ request_error: "error_token" }));
         }
       })
       .catch(error => {
-        console.error(error);
+        logger.error(`Error token request: ${error}`); 
+
+        res.redirect("/error?" + querystring.stringify({ request_error: "error" }));
       });
     }
 }

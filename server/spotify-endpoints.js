@@ -1,16 +1,16 @@
 const axios = require("axios");
 
 const { COOKIE_AUTH_TOKEN } = require('../utils/constants');
+const logger = require("../utils/logger");
 
 function topArtists(req, res, search_time_range, search_limit) {
   let access_token = req.cookies ? req.cookies[COOKIE_AUTH_TOKEN] : null;
 
-  console.log("Access token: " + access_token);
-
   if (access_token === null) {
-    const query = querystring.stringify({ request_error: "state_mismatch" });
+    logger.error(`Error in callback - access_token: ${access_token}`); 
+  
+    res.redirect("/error?" + querystring.stringify({ request_error: "null access token" }));
 
-    res.redirect("/error?" + query);
   } else {
     axios({
       url: "https://api.spotify.com/v1/me/top/artists",
@@ -26,9 +26,14 @@ function topArtists(req, res, search_time_range, search_limit) {
       });
 
       res.json(artists);
+
+      logger.debug(`artists: ${artists}`); 
+
     })
     .catch(function (error) {
-      console.log(error);
+        logger.error(`Error token request: ${error}`); 
+
+        res.redirect("/error?" + querystring.stringify({ request_error: "error" }));
     });
   }
 }
