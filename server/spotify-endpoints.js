@@ -1,10 +1,13 @@
 const axios = require("axios");
+const querystring = require("querystring");
 
 const { COOKIE_AUTH_TOKEN } = require('../utils/constants');
 const logger = require("../utils/logger");
 
 function topArtists(req, res, search_time_range, search_limit) {
   let access_token = req.cookies ? req.cookies[COOKIE_AUTH_TOKEN] : null;
+
+  logger.debug(`topArtists, access_token: ${access_token}`); 
 
   if (access_token === null) {
     logger.error(`Error in callback - access_token: ${access_token}`); 
@@ -20,6 +23,10 @@ function topArtists(req, res, search_time_range, search_limit) {
     })
     .then(function (response) {
       let artists = [];
+      
+      console.log(response); 
+      //logger.info(`response: ${response}`); 
+
 
       response.data.items.forEach((element) => {
         artists.push(element.name);
