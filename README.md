@@ -2,6 +2,8 @@
 
 Current version: 1.0.0
 
+Live deploy: https://my-api-spotify.onrender.com/
+
 ## Overview
 
 "My Spotify Top 3 Artists" is a web application that allows users to view their top 3 most listened-to artists on Spotify during a specific period of time. After logging in and authorizing the application to access their Spotify account, the application automatically retrieves the necessary information to display the requested data. The resulting HTML page presents the information in a simple and intuitive way. 
