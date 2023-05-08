@@ -58,12 +58,20 @@ For more information on the authentication flow, see the [Spotify Authorization 
 
 ## License
 
+This project is licensed under the terms of the MIT license. See the LICENSE file for details.
+
+The MIT License is a permissive free software license that allows you to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software. It is provided "as is" without express or implied warranty.
+
 ## Future development
 - Enhanced UI with a separate login page
 - Advanced cookie management
 - Implement additional routes for other Spotify APIs
+- Managing the Refresh Token
 
 ## Changelog
+
+- 1.0.0 (2023-05-XX)
+    - First relase
 
 ## References
 - [Spotify Authentication Guide](https://developer.spotify.com/documentation/general/guides/authentication/)
