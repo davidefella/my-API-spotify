@@ -55,8 +55,9 @@ The authentication method used in this project is the Client Credentials Flow. T
 
 To authenticate with the Spotify API, you will need to provide your Client ID and Client Secret, which can be obtained from the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/). Once you have obtained these credentials, you can make a request to the Spotify Web API to obtain an access token.
 
-For more information on the authentication flow, see the [Spotify Authorization Guide](https://developer.spotify.com/documentation/general/guides/authorization-guide/).
+Please note that applications running in development mode in Spotify can only handle up to 25 users (excluding the developer), and if you want to allow others to test your application, you will need to manually add them as authorized users in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/).
 
+For more information on the authentication flow, see the [Spotify Authorization Guide](https://developer.spotify.com/documentation/general/guides/authorization-guide/).
 
 ## License
 
