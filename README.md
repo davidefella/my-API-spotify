@@ -15,7 +15,7 @@ In order to run this application, you will need to have the following installed 
 - Basic understanding of Bootstrap, JavaScript and HTML
 - Node.js (version >= 14.0.0)
 - NPM (version >= 6.0.0)
-- A basic Spotify account
+- A Spotify account
 
 Nice to have: 
 
@@ -66,6 +66,7 @@ This project is licensed under the terms of the MIT license. See the LICENSE fil
 The MIT License is a permissive free software license that allows you to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the software. It is provided "as is" without express or implied warranty.
 
 ## Future development
+
 - Enhanced UI with a separate login page
 - Advanced cookie management
 - Implement additional routes for other Spotify APIs
@@ -77,8 +78,10 @@ The MIT License is a permissive free software license that allows you to use, co
     - First relase
 
 ## References
+
 - [Spotify Authentication Guide](https://developer.spotify.com/documentation/general/guides/authentication/)
 - [Spotify Web API Reference](https://developer.spotify.com/documentation/web-api/reference/)
 
 ## Author
+
 - Author: Davide Fella 

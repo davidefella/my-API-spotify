@@ -1,3 +1,4 @@
+//This code defines a function getHashParams that extracts the access_token, refresh_token, and error from the URL hash parameters
 function getHashParams() {
   let hashParams = {};
   let e,

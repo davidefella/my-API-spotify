@@ -6,20 +6,24 @@ const { COOKIE_SPOTIFY_AUTH_STATE, COOKIE_AUTH_TOKEN, COOKIE_REFRESH_TOKEN } = r
 
 const logger = require("../utils/logger");
 
+// Get the client secret encoded in base64 for authentication (required from Spotify APIs)
 const client_secret_base64 = Buffer.from(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET).toString('base64'); 
 
 function authorize(res){
 
+    // Clear any existing cookies
     for (const cookie in res.cookies) {
         res.clearCookie(cookie);
       }
 
+    // Generate a random state string and store it in a cookie (required from Spotify APIs)
     let spotifyAuthState = generateRandomString(16);
 
     res.cookie(COOKIE_SPOTIFY_AUTH_STATE, spotifyAuthState);
 
     const scope = "user-read-private user-read-email user-top-read";
 
+    // Redirect user to Spotify authorization page
     res.redirect(
     "https://accounts.spotify.com/authorize?" +
         querystring.stringify({
@@ -32,6 +36,7 @@ function authorize(res){
     );
 }
 
+// Handle Spotify callback after user has authorized. Setup in the configuration page. 
 function callback(req, res ){
     let code = req.query.code || null;
     let state = req.query.state || null;
@@ -44,7 +49,8 @@ function callback(req, res ){
   
       res.redirect("/error?" + querystring.stringify({ request_error: "state_mismatch" }));
     } else {
-  
+      
+      // Use authorization code to request access and refresh tokens from Spotify API
       axios({
         url: 'https://accounts.spotify.com/api/token',
         method: 'post',
