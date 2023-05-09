@@ -1,0 +1,12 @@
+html,
+body {
+    height: 100%;
+}
+
+#logged-in {
+    font-family: 'Roboto', sans-serif;
+}
+
+#top-artists {
+    font-size: 1.4em;
+}
