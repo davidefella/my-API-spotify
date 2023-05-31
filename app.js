@@ -29,7 +29,7 @@ app.get("/callback", function (req, res) {
 app.get("/topartists", function (req, res) {
   logger.http('/topartists');
 
-  topArtists(req, res, "short_term", 3);
+  topArtists(req, res, "long_term", 3);
 });
 
 logger.info('Listening on 8888');
